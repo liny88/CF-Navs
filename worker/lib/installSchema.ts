@@ -63,8 +63,16 @@ function splitSqlStatements(sql: string): string[] {
       statement += character
       continue
     }
-    if (character === ';') {
+      if (character === ';') {
       const trimmed = statement.trim()
+      const isTrigger =
+        /^CREATE\s+(?:TEMP(?:ORARY)?\s+)?TRIGGER\b/i.test(trimmed)
+
+      if (isTrigger && !/\bEND\s*$/i.test(trimmed)) {
+        statement += character
+        continue
+      }
+
       if (trimmed) statements.push(trimmed)
       statement = ''
       continue
