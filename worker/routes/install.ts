@@ -312,7 +312,8 @@ installRoutes.post('/install', async (c) => {
     } catch {
       return noStore(c.json(fail(ErrCode.SERVER_ERROR, 'installation completed but session creation failed')))
     }
-  } catch {
+    } catch (error) {
+    console.error('CF_NAVS_INSTALL_FAILED', error)
     if (claimToken) {
       try {
         const committed = await getInstallationState(c.env.DB)
